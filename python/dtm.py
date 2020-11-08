@@ -4,7 +4,7 @@ import re
 
 import references
 
-NUMBERS_RE = re.compile(r'^[0-9. -]*$')
+NUMBERS_RE = re.compile(r'^[-0-9.\s]*$')
 
 class DTM:
     def __init__(self, zippath):
@@ -57,9 +57,11 @@ class DTM:
                     while len(more_data) > 0:
                         lines = lines + more_data
                         more_data = cached_stream.readlines()
-            heights = [[float(word) for word in line.split()]
-                       for line in lines if NUMBERS_RE.match(line)
-                      ]
+            heights = [
+                [float(word) for word in text.split()]
+                for text in [line.decode('iso8859-1') for line in lines]
+                if NUMBERS_RE.match(text)
+            ]
             self.heights[two_fig] = heights
 
         l = 200 - northings % 10000 // 50
