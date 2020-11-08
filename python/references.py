@@ -49,7 +49,7 @@ def to_osref(input, figures):
     Convert OS reference or (eastings, northings) to OS reference of a given
     number of figures
     """
-    if figures < 4 or figures > 10 or figures % 2 != 0:
+    if figures < 2 or figures > 10 or figures % 2 != 0:
         raise InvalidFigureReferenceRequest(figures)
     if type(input) == str:
         if not VALID_RE.match(input):

@@ -38,7 +38,7 @@ class TestReferenes(unittest.TestCase):
         self.assertEqual(references.to_osref('s u123123', 4), 'SU1212')
 
     def test_eastings_and_northings_su(self):
-        self.assertEqual(references.to_osref((472847, 127395), 6), 'SU728273')
+        self.assertEqual(references.to_osref((472847, 127395), 2), 'SU72')
 
     def test_eastings_and_northings_ny(self):
         self.assertEqual(references.to_osref((372847, 527395), 8), 'NY72842739')
