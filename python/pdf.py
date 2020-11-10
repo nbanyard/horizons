@@ -3,10 +3,14 @@
 #
 # Copyright (c) 2020 Nick Banyard
 #
+import math
+
 from reportlab.pdfgen import canvas
+from reportlab.lib.colors import black
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
-from reportlab.lib.colors import black
+from reportlab.lib.utils import ImageReader
+from PIL import Image
 
 PAGE_SIZE = A4
 PAGE_WIDTH, PAGE_HEIGHT = PAGE_SIZE
@@ -32,6 +36,25 @@ class Document:
         self.canvas = canvas.Canvas(filename, pagesize=PAGE_SIZE)
         self.title = title
         self.panelCount = panelCount
+
+    def add_map(self, filename, radius, eastings, northing):
+        """
+        Radius, eastings and northings in metres
+        Eastins and northings are the centre of the map
+        """
+        save_max_image = Image.MAX_IMAGE_PIXELS
+        Image.MAX_IMAGE_PIXELS = 7000 * 13000 # MiniScale map is large
+        country = Image.open(filename)
+        country_height = country.size[1]
+        # (left, right, upper, lower), origin in upper left
+        box = (
+            (eastings - radius) / 100,
+            country_height - (northing + radius) / 100,
+            (eastings + radius) / 100,
+            country_height - (northing - radius) / 100,
+        )
+        self.map_image = ImageReader(country.crop(box))
+        Image.MAX_IMAGE_PIXELS = save_max_image 
 
     def save(self):
         self.genPanarama()
@@ -75,9 +98,29 @@ class Document:
         mapY = (PAGE_HEIGHT - mapSide) / 2
 
         self.drawTitle()
+        if self.map_image:
+            self.canvas.drawImage(self.map_image, mapX, mapY, mapSide, mapSide)
         self.canvas.setStrokeColor(black)
         self.canvas.setLineWidth(1)
         self.canvas.rect(mapX, mapY, mapSide, mapSide)
+        # Compass points
+        self.canvas.line(
+            mapX + mapSide / 2, mapY + mapSide,
+            mapX + mapSide / 2, mapY
+        )
+        self.canvas.line(
+            mapX, mapY + mapSide / 2,
+            mapX + mapSide, mapY + mapSide / 2
+        )
+        mapDiagOffset = (2 - math.sqrt(2)) / 4 * mapSide
+        self.canvas.line(
+            mapX + mapDiagOffset, mapY + mapDiagOffset,
+            mapX + mapSide - mapDiagOffset, mapY + mapSide - mapDiagOffset
+        )
+        self.canvas.line(
+            mapX + mapDiagOffset, mapY + mapSide - mapDiagOffset,
+            mapX + mapSide - mapDiagOffset, mapY + mapDiagOffset
+        )
         self.canvas.showPage()
 
     def drawTitle(self):

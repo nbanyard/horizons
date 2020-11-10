@@ -13,4 +13,5 @@ class TestPdf(unittest.TestCase):
         Creates outline document, no assertions, manual check required
         """
         document = pdf.Document('test_horizon.pdf', 'Outline Only', 4)
+        document.add_map('../data/miniscale.tif', 40000, 499263, 158603)
         document.save()
