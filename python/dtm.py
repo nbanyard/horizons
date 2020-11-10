@@ -1,3 +1,8 @@
+#
+# Horizon Generator - Python
+#
+# Copyright (c) 2020 Nick Banyard
+#
 import os
 import zipfile
 import re

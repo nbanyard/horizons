@@ -1,3 +1,8 @@
+#
+# Horizon Generator - Python
+#
+# Copyright (c) 2020 Nick Banyard
+#
 import re
 
 VALID_RE = re.compile(r"^\s*[STNstn]\s*[A-Za-z]\s*(?:\d\s*\d\s*){2,5}$")

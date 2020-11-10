@@ -1,3 +1,8 @@
+#
+# Horizon Generator - Python
+#
+# Copyright (c) 2020 Nick Banyard
+#
 import math
 import unittest
 from unittest.mock import Mock, call

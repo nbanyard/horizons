@@ -1,3 +1,8 @@
+#
+# Horizon Generator - Python
+#
+# Copyright (c) 2020 Nick Banyard
+#
 import unittest
 from unittest.mock import patch, Mock, MagicMock, mock_open, call
 
